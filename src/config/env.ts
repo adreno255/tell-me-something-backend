@@ -15,3 +15,4 @@ const requireEnv = (key: string): string => {
 export const NODE_ENV = requireEnv('NODE_ENV');
 export const PORT = requireEnv('PORT');
 export const CLIENT_URL = requireEnv('CLIENT_URL');
+export const MONGODB_URI = requireEnv('MONGODB_URI');
