@@ -1,0 +1,35 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "TypeScript Express API",
+        "version": "1.0.0",
+        "description": "Interactive API documentation for our Express server"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "Local Development Server"
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "summary": "Root Endpoint",
+                "description": "Returns a welcome message from the server.",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Hello from TypeScript Express!"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
