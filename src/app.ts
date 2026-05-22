@@ -9,6 +9,7 @@ import swaggerDocument from './swagger.json' with { type: 'json' };
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import connectDB from './config/database.js';
+import { errorHandler } from './middlewares/error-handler.js';
 
 const app = express();
 
@@ -42,6 +43,8 @@ app.get('/', (req: Request, res: Response) => {
         version: readPackageVersion(),
     });
 });
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     logger.info(`Server is running at http://localhost:${PORT}`);
