@@ -2,10 +2,10 @@
     "name": "tell-me-something-backend",
     "version": "1.0.0",
     "description": "The backend API server for Tell Me Something which is an MVP that allows users to express their unsaid thoughts.",
-    "main": "main.js",
+    "main": "app.js",
     "scripts": {
         "build": "tsc -p tsconfig.build.json",
-        "start": "node dist/main.js",
+        "start": "node dist/app.js",
         "dev": "nodemon",
         "test": "echo \"Error: no test specified\" && exit 1",
         "prepare": "husky"
