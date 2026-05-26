@@ -1,5 +1,7 @@
+import { StatusCodes } from 'http-status-codes';
 import { Post, type CreatePostInput, type GetPostsQueryInput } from '../models/post.model.js';
 import type { PaginatedResponse } from '../types/pagination.types.js';
+import { AppError } from '../utils/app-error.js';
 import { PaginationHelper } from '../utils/pagination.util.js';
 
 export async function getAllPosts(
@@ -16,6 +18,19 @@ export async function getAllPosts(
     ]);
 
     return PaginationHelper.createResponse(data, totalItems, query);
+}
+
+export async function getPostById(id: string) {
+    const post = await Post.findById(id);
+
+    if (!post) {
+        throw new AppError('Post not found', StatusCodes.NOT_FOUND);
+    }
+
+    return {
+        message: 'Post retrieved successfully!',
+        post,
+    };
 }
 
 export async function createPost(input: CreatePostInput) {

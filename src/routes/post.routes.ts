@@ -1,7 +1,11 @@
 import { Router } from 'express';
-import { CreatePostSchema, GetPostsQuerySchema } from '../models/post.model.js';
+import { CreatePostSchema, GetPostParamSchema, GetPostsQuerySchema } from '../models/post.model.js';
 import { validate } from '../middlewares/validate.js';
-import { createPostController, getAllPostsController } from '../controllers/post.controller.js';
+import {
+    createPostController,
+    getAllPostsController,
+    getPostByIdController,
+} from '../controllers/post.controller.js';
 
 const router = Router();
 
@@ -58,6 +62,49 @@ router.get('/', validate(GetPostsQuerySchema, 'query'), getAllPostsController);
 
 /**
  * @openapi
+ * /posts/{id}:
+ *   get:
+ *     summary: Get post by ID
+ *     description: Retrieve a specific post by its ID.
+ *     tags:
+ *       - Posts
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the post to retrieve
+ *     responses:
+ *       200:
+ *         description: Post retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Post retrieved successfully!
+ *                 post:
+ *                   $ref: '#/components/schemas/Post'
+ *       400:
+ *         description: Invalid query parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *        description: Internal Server Error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ErrorResponse'
+ */
+router.get('/:id', validate(GetPostParamSchema, 'params'), getPostByIdController);
+
+/**
+ * @openapi
  * /posts:
  *   post:
  *     summary: Create a post
@@ -72,11 +119,17 @@ router.get('/', validate(GetPostsQuerySchema, 'query'), getAllPostsController);
  *             $ref: '#/components/schemas/CreatePostInput'
  *     responses:
  *       201:
- *         description: Post created
+ *         description: Post created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Post'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Post created successfully!
+ *                 post:
+ *                   $ref: '#/components/schemas/Post'
  *       400:
  *         description: Validation error
  *         content:

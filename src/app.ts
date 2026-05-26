@@ -19,7 +19,28 @@ app.use(corsMiddleware);
 app.use(morgan('dev', { stream: morganStream }));
 app.use(express.json());
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(
+    '/docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument, {
+        customSiteTitle: 'Tell Me Something API Docs',
+        swaggerOptions: {
+            operationsSorter: (
+                a: { get: (key: string) => string },
+                b: { get: (key: string) => string },
+            ) => {
+                const methodsOrder = ['get', 'post', 'put', 'patch', 'delete'];
+                const methodA = a.get('method');
+                const methodB = b.get('method');
+                let result = methodsOrder.indexOf(methodA) - methodsOrder.indexOf(methodB);
+                if (result === 0) {
+                    result = a.get('path').localeCompare(b.get('path'));
+                }
+                return result;
+            },
+        },
+    }),
+);
 
 /**
  * @openapi

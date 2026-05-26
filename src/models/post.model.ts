@@ -67,6 +67,10 @@ export const GetPostsQuerySchema = PaginationQuerySchema.extend({
     recipient: z.string().optional(),
 });
 
+export const GetPostParamSchema = z.object({
+    id: z.string(),
+});
+
 export const CreatePostSchema = z.object({
     recipient: z.string().min(1).max(20),
     content: z.string().min(1).max(4000),
@@ -74,6 +78,7 @@ export const CreatePostSchema = z.object({
 });
 
 export type GetPostsQueryInput = z.infer<typeof GetPostsQuerySchema>;
+export type GetPostParamInput = z.infer<typeof GetPostParamSchema>;
 export type CreatePostInput = z.infer<typeof CreatePostSchema>;
 
 // Mongoose Schema
