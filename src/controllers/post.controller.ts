@@ -3,7 +3,7 @@ import { type CreatePostInput, type GetPostsQueryInput } from '../models/post.mo
 import { createPost, getAllPosts, getPostById } from '../services/post.service.js';
 
 export async function getAllPostsController(req: Request, res: Response) {
-    const query = req.query as unknown as GetPostsQueryInput;
+    const query = res.locals.query as GetPostsQueryInput;
     const result = await getAllPosts(query);
     res.status(200).json(result);
 }

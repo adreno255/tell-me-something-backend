@@ -10,7 +10,9 @@ export const errorHandler: ErrorRequestHandler = (err: unknown, req, res, _next)
         statusCode = err.statusCode;
         message = err.payload;
     } else {
-        logger.error('Unexpected error', { error: err });
+        const stack =
+            err instanceof Error ? err.stack?.split('\n').slice(0, 4).join('\n') : String(err);
+        logger.error(stack);
     }
 
     res.status(statusCode).json({

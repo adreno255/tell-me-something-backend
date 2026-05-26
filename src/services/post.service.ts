@@ -8,7 +8,7 @@ export async function getAllPosts(
     query: GetPostsQueryInput,
 ): Promise<PaginatedResponse<typeof Post.prototype>> {
     const { recipient } = query;
-    const filter = recipient ? { recipient } : {};
+    const filter = recipient ? { recipient: { $regex: recipient, $options: 'i' } } : {};
 
     const [data, totalItems] = await Promise.all([
         Post.find(filter)
