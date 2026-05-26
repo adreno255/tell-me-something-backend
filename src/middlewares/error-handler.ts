@@ -4,11 +4,11 @@ import logger from '../utils/logger.js';
 
 export const errorHandler: ErrorRequestHandler = (err: unknown, req, res, _next) => {
     let statusCode = 500;
-    let message = 'Internal Server Error';
+    let message: string | object = 'Internal Server Error';
 
     if (err instanceof AppError) {
         statusCode = err.statusCode;
-        message = err.message;
+        message = err.payload;
     } else {
         logger.error('Unexpected error', { error: err });
     }

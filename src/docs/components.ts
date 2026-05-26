@@ -47,6 +47,15 @@
  *           type: string
  *           example: /endpoint-path
  *         message:
- *           type: string
- *           example: Specific error message describing what went wrong
+ *           oneOf:
+ *             - type: string
+ *               example: Specific error message describing what went wrong
+ *             - type: object
+ *               properties:
+ *                 field:
+ *                   type: string
+ *                   example: fieldName
+ *                 message:
+ *                   type: string
+ *                   example: Error message for the specific field
  */

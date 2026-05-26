@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import type { ZodType } from 'zod';
+import { AppError } from '../utils/app-error.js';
 
 type RequestTarget = 'body' | 'params' | 'query';
 
@@ -9,8 +11,15 @@ export const validate =
         const result = schema.safeParse(req[target]);
 
         if (!result.success) {
-            res.status(400).json({ errors: result.error.flatten() });
-            return;
+            return next(
+                new AppError(
+                    result.error.issues.map((issue) => ({
+                        field: issue.path.join('.'),
+                        message: issue.message,
+                    })),
+                    StatusCodes.BAD_REQUEST,
+                ),
+            );
         }
 
         req[target] = result.data;

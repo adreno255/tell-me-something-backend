@@ -1,12 +1,14 @@
 import type { StatusCodes } from 'http-status-codes';
 
 export class AppError extends Error {
-    public readonly statusCode: number;
+    public readonly statusCode: StatusCodes;
+    public readonly payload: string | object;
 
-    constructor(message: string, statusCode: StatusCodes) {
-        super(message);
+    constructor(payload: string | object, statusCode: StatusCodes) {
+        super(typeof payload === 'string' ? payload : JSON.stringify(payload));
         this.name = 'AppError';
         this.statusCode = statusCode;
+        this.payload = payload;
         Error.captureStackTrace(this, this.constructor);
     }
 }

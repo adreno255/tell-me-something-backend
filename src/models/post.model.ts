@@ -68,7 +68,7 @@ export const GetPostsQuerySchema = PaginationQuerySchema.extend({
 });
 
 export const CreatePostSchema = z.object({
-    recepient: z.string().min(1).max(20),
+    recipient: z.string().min(1).max(20),
     content: z.string().min(1).max(4000),
     signature: z.string().min(1).max(20),
 });
@@ -80,7 +80,7 @@ export type CreatePostInput = z.infer<typeof CreatePostSchema>;
 
 const postSchema = new Schema<CreatePostInput>(
     {
-        recepient: { type: String, required: true },
+        recipient: { type: String, required: true },
         content: { type: String, required: true },
         signature: { type: String, required: true },
     },
