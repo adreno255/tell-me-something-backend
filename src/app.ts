@@ -5,10 +5,11 @@ import morgan from 'morgan';
 import logger, { morganStream } from './utils/logger.js';
 import { corsMiddleware } from './config/cors.js';
 import { PORT } from './config/env.js';
-import swaggerDocument from './swagger.json' with { type: 'json' };
+import { swaggerDocument } from './config/swagger.js';
 import connectDB from './config/database.js';
 import { errorHandler } from './middlewares/error-handler.js';
 import { getAppInfo } from './services/app.service.js';
+import postRouter from './routes/post.routes.js';
 
 const app = express();
 
@@ -20,9 +21,33 @@ app.use(express.json());
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+/**
+ * @openapi
+ * /:
+ *   get:
+ *     summary: API server status check
+ *     description: Returns server status and environment information.
+ *     tags:
+ *       - System
+ *     responses:
+ *       200:
+ *         description: Server is running
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AppInfo'
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 app.get('/', (req: Request, res: Response) => {
     res.send(getAppInfo());
 });
+
+app.use('/posts', postRouter);
 
 app.use(errorHandler);
 
