@@ -21,7 +21,7 @@ const level = () => {
     if (NODE_ENV === 'development') {
         return 'debug';
     } else {
-        return 'warn';
+        return 'info';
     }
 };
 
