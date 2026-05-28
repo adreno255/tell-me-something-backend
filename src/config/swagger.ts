@@ -13,6 +13,10 @@ const swaggerOptions: OAS3Options = {
                 url: 'http://localhost:3000',
                 description: 'Local Development Server',
             },
+            {
+                url: 'https://tell-me-something-backend.onrender.com',
+                description: 'Production Server',
+            },
         ],
         tags: [
             { name: 'System', description: 'Entry endpoint of the API server' },
