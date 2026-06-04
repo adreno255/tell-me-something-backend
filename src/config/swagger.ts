@@ -1,4 +1,10 @@
 import swaggerJsdoc, { type OAS3Options } from 'swagger-jsdoc';
+import { NODE_ENV } from './env.js';
+
+const apis =
+    NODE_ENV === 'production'
+        ? ['./dist/app.js', './dist/routes/*.js', './dist/models/*.js', './dist/docs/*.js']
+        : ['./src/app.ts', './src/routes/*.ts', './src/models/*.ts', './src/docs/*.ts'];
 
 const swaggerOptions: OAS3Options = {
     definition: {
@@ -23,7 +29,7 @@ const swaggerOptions: OAS3Options = {
             { name: 'Posts', description: 'Post management endpoints' },
         ],
     },
-    apis: ['./src/app.ts', './src/routes/*.ts', './src/models/*.ts', './src/docs/*.ts'],
+    apis,
 };
 
 export const swaggerDocument = swaggerJsdoc(swaggerOptions);
