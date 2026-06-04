@@ -65,6 +65,7 @@ import { PaginationQuerySchema } from '../utils/pagination.util.js';
 
 export const GetPostsQuerySchema = PaginationQuerySchema.extend({
     recipient: z.string().optional(),
+    sortOrder: z.enum(['asc', 'desc']).default('desc'),
 });
 
 export const GetPostParamSchema = z.object({

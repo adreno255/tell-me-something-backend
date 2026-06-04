@@ -38,6 +38,14 @@ const router = Router();
  *         schema:
  *           type: string
  *         description: Filter by recipient name
+ *       - in: query
+ *         name: sortOrder
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: desc
+ *         description: Sort posts by creation date
  *     responses:
  *       200:
  *         description: Paginated list of posts
