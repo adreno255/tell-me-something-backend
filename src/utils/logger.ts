@@ -48,7 +48,9 @@ const logger = winston.createLogger({
     format: process.env.NODE_ENV === 'development' ? devFormat : prodFormat,
     transports: [
         new winston.transports.Console(),
-        new winston.transports.File({ filename: 'logs/error/log', level: 'error' }),
+        ...(NODE_ENV === 'development'
+            ? [new winston.transports.File({ filename: 'logs/error.log', level: 'error' })]
+            : []),
     ],
 });
 

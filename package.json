@@ -8,6 +8,8 @@
         "start": "node --env-file=.env.production dist/app.js",
         "dev": "nodemon",
         "test": "echo \"Error: no test specified\" && exit 1",
+        "docker:build": "docker build -t tell-me-something-backend:prod .",
+        "docker:run": "docker run -d --env-file .env.production -p 3000:3000 tell-me-something-backend:prod",
         "prepare": "husky"
     },
     "repository": {
