@@ -3,6 +3,7 @@ import { Post, type CreatePostInput, type GetPostsQueryInput } from '../models/p
 import type { PaginatedResponse } from '../types/pagination.types.js';
 import { AppError } from '../utils/app-error.js';
 import { PaginationHelper } from '../utils/pagination.util.js';
+import { Error as MongooseError } from 'mongoose';
 
 export async function getAllPosts(
     query: GetPostsQueryInput,
@@ -22,16 +23,16 @@ export async function getAllPosts(
 }
 
 export async function getPostById(id: string) {
-    const post = await Post.findById(id);
-
-    if (!post) {
-        throw new AppError('Post not found', StatusCodes.NOT_FOUND);
+    try {
+        const post = await Post.findById(id);
+        if (!post) throw new AppError('Post not found', StatusCodes.NOT_FOUND);
+        return { message: 'Post fetched successfully!', post };
+    } catch (error) {
+        if (error instanceof MongooseError.CastError) {
+            throw new AppError('Post not found', StatusCodes.NOT_FOUND);
+        }
+        throw error;
     }
-
-    return {
-        message: 'Post retrieved successfully!',
-        post,
-    };
 }
 
 export async function createPost(input: CreatePostInput) {
