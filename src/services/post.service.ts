@@ -11,15 +11,22 @@ export async function getAllPosts(
     const { recipient, sortOrder } = query;
     const filter = recipient ? { recipient: { $regex: `^${recipient}`, $options: 'i' } } : {};
 
-    const [data, totalItems] = await Promise.all([
-        Post.find(filter)
-            .sort({ createdAt: sortOrder === 'asc' ? 1 : -1 })
-            .skip(PaginationHelper.getMongooseOptions(query).skip)
-            .limit(PaginationHelper.getMongooseOptions(query).limit),
-        Post.countDocuments(filter),
-    ]);
+    try {
+        const [data, totalItems] = await Promise.all([
+            Post.find(filter)
+                .sort({ createdAt: sortOrder === 'asc' ? 1 : -1 })
+                .skip(PaginationHelper.getMongooseOptions(query).skip)
+                .limit(PaginationHelper.getMongooseOptions(query).limit),
+            Post.countDocuments(filter),
+        ]);
 
-    return PaginationHelper.createResponse(data, totalItems, query);
+        return PaginationHelper.createResponse(data, totalItems, query);
+    } catch (error) {
+        if (error instanceof Error && error.name === 'MongoServerError') {
+            return PaginationHelper.createResponse([], 0, query);
+        }
+        throw error;
+    }
 }
 
 export async function getPostById(id: string) {
