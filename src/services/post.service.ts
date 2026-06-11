@@ -5,34 +5,34 @@ import { AppError } from '../utils/app-error.js';
 import { PaginationHelper } from '../utils/pagination.util.js';
 import { Error as MongooseError } from 'mongoose';
 
+function escapeRegex(str: string): string {
+    return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
+
 export async function getAllPosts(
     query: GetPostsQueryInput,
 ): Promise<PaginatedResponse<typeof Post.prototype>> {
     const { recipient, sortOrder } = query;
-    const filter = recipient ? { recipient: { $regex: `^${recipient}`, $options: 'i' } } : {};
+    const filter = recipient
+        ? { recipient: { $regex: `^${escapeRegex(recipient)}`, $options: 'i' } }
+        : {};
 
-    try {
-        const [data, totalItems] = await Promise.all([
-            Post.find(filter)
-                .sort({ createdAt: sortOrder === 'asc' ? 1 : -1 })
-                .skip(PaginationHelper.getMongooseOptions(query).skip)
-                .limit(PaginationHelper.getMongooseOptions(query).limit),
-            Post.countDocuments(filter),
-        ]);
+    const [data, totalItems] = await Promise.all([
+        Post.find(filter)
+            .sort({ createdAt: sortOrder === 'asc' ? 1 : -1 })
+            .skip(PaginationHelper.getMongooseOptions(query).skip)
+            .limit(PaginationHelper.getMongooseOptions(query).limit),
+        Post.countDocuments(filter),
+    ]);
 
-        return PaginationHelper.createResponse(data, totalItems, query);
-    } catch (error) {
-        if (error instanceof Error && error.name === 'MongoServerError') {
-            return PaginationHelper.createResponse([], 0, query);
-        }
-        throw error;
-    }
+    return PaginationHelper.createResponse(data, totalItems, query);
 }
 
 export async function getPostById(id: string) {
     try {
         const post = await Post.findById(id);
         if (!post) throw new AppError('Post not found', StatusCodes.NOT_FOUND);
+
         return { message: 'Post fetched successfully!', post };
     } catch (error) {
         if (error instanceof MongooseError.CastError) {
